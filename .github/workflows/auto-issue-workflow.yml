@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Adicionar Issue ao Quadro
-        uses: actions/add-to-project@v1
+        uses: muesli/action-add-project-card@v1
         with:
           project-url: https://github.com/alepmedeiros/erp-pdv-axiapos/projects/21
           column-name: >
