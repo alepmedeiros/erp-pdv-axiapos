@@ -2,7 +2,7 @@ name: Auto-Add Issues to Project Board with Labels
 
 on:
   issues:
-    types: [opened]
+    types: [labeled]
 
 jobs:
   add-to-project:
@@ -15,8 +15,8 @@ jobs:
           project-url: https://github.com/alepmedeiros/erp-pdv-axiapos/projects/21
           column-name: >
             ${{ 
-              contains(github.event.issue.labels.*.name, 'bug') && 'Backlog' || 
-              contains(github.event.issue.labels.*.name, 'feature') && 'To Do' || 
+              contains(github.event.label.name, 'bug') && 'Backlog' || 
+              contains(github.event.label.name, 'feature') && 'To Do' || 
               'In Progress' 
             }}
           token: ${{ secrets.GITHUB_TOKEN }}
