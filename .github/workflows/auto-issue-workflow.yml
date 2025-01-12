@@ -1,33 +1,20 @@
-name: Auto-Label and Move Issues to Project Columns
+name: Auto-Move Issues to Project Columns
 
 on:
   issues:
     types: [labeled]
 
 jobs:
-  auto-label-and-move:
+  move-to-project:
     runs-on: ubuntu-latest
 
     steps:
-      # Adicionar Rótulos (Se necessário, mantenha esta parte)
-      - name: Adicionar Rótulos às Issues
-        uses: actions-ecosystem/action-add-labels@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: |
-            - bug
-            - feature
-            - task
-            - enhancement
-            - urgent
-
-      # Mover a Issue para o Quadro
       - name: Mover Issue para o Projeto Beta com Base no Rótulo
         uses: actions/add-to-project@v1.0.2
         with:
-          project-url: https://github.com/users/alepmedeiros/projects/23
-          field: "Status" # Nome do campo customizado no projeto
-          value: >
+          project-url: https://github.com/users/alepmedeiros/projects/23 # Substitua pelo URL do projeto Beta
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          field-value: >
             ${{ 
               github.event.label.name == 'bug' && 'Backlog' || 
               github.event.label.name == 'feature' && 'To Do' || 
@@ -35,4 +22,3 @@ jobs:
               github.event.label.name == 'enhancement' && 'Enhancements' || 
               'General' 
             }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
