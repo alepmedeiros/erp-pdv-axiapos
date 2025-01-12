@@ -1,0 +1,36 @@
+name: Auto-Label Issues by Keywords
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add-labels:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Adicionar Rótulos Baseados em Palavras-Chave
+        run: |
+          ISSUE_NUMBER=$(jq -r .issue.number "$GITHUB_EVENT_PATH")
+          ISSUE_TITLE=$(jq -r .issue.title "$GITHUB_EVENT_PATH")
+          LABELS=""
+
+          # Adiciona rótulos com base em palavras-chave no título
+          if [[ "$ISSUE_TITLE" =~ "bug" ]]; then
+            LABELS+="bug,"
+          fi
+          if [[ "$ISSUE_TITLE" =~ "feature" ]]; then
+            LABELS+="feature,"
+          fi
+          if [[ "$ISSUE_TITLE" =~ "urgent" ]]; then
+            LABELS+="urgent,"
+          fi
+
+          # Aplica os rótulos à issue
+          if [ -n "$LABELS" ]; then
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d '{"labels":['"${LABELS%,}"']}' \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER"
+          fi

@@ -1,0 +1,22 @@
+name: Auto-Add Issues to Project Board with Labels
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Adicionar Issue ao Quadro
+        uses: actions/add-to-project@v1
+        with:
+          project-url: https://github.com/alepmedeiros/erp-pdv-axiapos/projects/21
+          column-name: >
+            ${{ 
+              contains(github.event.issue.labels.*.name, 'bug') && 'Backlog' || 
+              contains(github.event.issue.labels.*.name, 'feature') && 'To Do' || 
+              'In Progress' 
+            }}
+          token: ${{ secrets.GITHUB_TOKEN }}
