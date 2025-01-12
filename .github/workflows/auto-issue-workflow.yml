@@ -10,13 +10,13 @@ jobs:
 
     steps:
       - name: Adicionar Issue ao Quadro
-        uses: muesli/action-add-project-card@v1
+        uses: alstr/remove-project-card@v1
         with:
-          project-url: https://github.com/alepmedeiros/erp-pdv-axiapos/projects/21
-          column-name: >
+          project: "21" # Substitua pelo ID do seu projeto
+          column: >
             ${{ 
-              contains(github.event.label.name, 'bug') && 'Backlog' || 
-              contains(github.event.label.name, 'feature') && 'To Do' || 
+              github.event.label.name == 'bug' && 'Backlog' || 
+              github.event.label.name == 'feature' && 'To Do' || 
               'In Progress' 
             }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
