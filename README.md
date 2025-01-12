@@ -91,8 +91,8 @@ src/
 ### **2. Configuração do Projeto**
 1. Clone o repositório:
    ```bash
-   git clone https://git.empresa.com.br/repositorio-privado.git
-   cd repositorio-privado  
+   git clone https://git.empresa.com.br/erp-pdv-axiapos.git
+   cd erp-pdv-axiapos  
 2. Instale as dependências:
    ```bash
    npm install
