@@ -2,9 +2,9 @@ name: Auto-Move Issues and PRs to Project Beta
 
 on:
   issues:
-    types: [opened]
+    types: [opened, closed]
   pull_request:
-    types: [opened]
+    types: [opened, closed]
 
 jobs:
   move-to-project:
@@ -13,12 +13,20 @@ jobs:
     steps:
       # Mover Issue ou PR para o Projeto Beta com Base no Label
       - name: Mover para Projeto Beta com Base no Label
-        uses: actions/add-to-project@v1.0.2
+        if: github.event.action == 'opened'
+        uses: actions/add-to-project@v0.4.0
         with:
-          # Substitua pela URL completa do seu projeto Beta
-          project-url: https://github.com/users/alepmedeiros/projects/23
+          project-url: https://github.com/users/alepmedeiros/projects/23 # Substitua pela URL completa do projeto Beta
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # Labels que acionam a movimentação
-          labeled: bug, feature, urgent, enhancement
-          # Operador lógico para combinar labels (OR = qualquer label move a issue)
-          label-operator: OR
+          labeled: bug, feature, urgent, enhancement # Labels que acionam a movimentação
+          label-operator: OR # Operador lógico para combinar labels (OR = qualquer label move a issue)
+
+      # Mover Issue ou PR para Done ao ser Fechado
+      - name: Mover para Done ao Fechar
+        if: github.event.action == 'closed'
+        uses: actions/add-to-project@v0.4.0
+        with:
+          project-url: https://github.com/users/alepmedeiros/projects/23 # Substitua pela URL completa do projeto Beta
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          field: Status # Nome do campo customizado
+          field-value: Done # Move para a coluna Done
