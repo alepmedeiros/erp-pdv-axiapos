@@ -25,7 +25,7 @@ jobs:
       - name: Mover Issue para o Projeto Beta com Base no Rótulo
         uses: actions/add-to-project@v1.0.2
         with:
-          project: "23" # Substitua pelo ID do projeto Beta
+          project-url: https://github.com/users/alepmedeiros/projects/23
           field: "Status" # Nome do campo customizado no projeto
           value: >
             ${{ 
