@@ -1,24 +1,24 @@
-name: Auto-Move Issues to Project Columns
+name: Auto-Move Issues and PRs to Project Beta
 
 on:
   issues:
-    types: [labeled]
+    types: [opened]
+  pull_request:
+    types: [opened]
 
 jobs:
   move-to-project:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Mover Issue para o Projeto Beta com Base no Rótulo
+      # Mover Issue ou PR para o Projeto Beta com Base no Label
+      - name: Mover para Projeto Beta com Base no Label
         uses: actions/add-to-project@v1.0.2
         with:
-          project-url: https://github.com/users/alepmedeiros/projects/23 # Substitua pelo URL do projeto Beta
+          # Substitua pela URL completa do seu projeto Beta
+          project-url: https://github.com/users/alepmedeiros/projects/23
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-value: >
-            ${{ 
-              github.event.label.name == 'bug' && 'Backlog' || 
-              github.event.label.name == 'feature' && 'To Do' || 
-              github.event.label.name == 'urgent' && 'In Progress' || 
-              github.event.label.name == 'enhancement' && 'Enhancements' || 
-              'General' 
-            }}
+          # Labels que acionam a movimentação
+          labeled: bug, feature, urgent, enhancement
+          # Operador lógico para combinar labels (OR = qualquer label move a issue)
+          label-operator: OR
