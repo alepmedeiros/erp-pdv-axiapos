@@ -16,6 +16,7 @@ O projeto é baseado em **Clean Architecture**, **Domain-Driven Design (DDD)** e
 
 ## 🚀 Tecnologias Utilizadas
 
+### **Frontend**
 - **Vue 3**: Framework moderno para construção de interfaces de usuário.
 - **TypeScript**: Tipagem estática para maior segurança e escalabilidade.
 - **PrimeVue**: Biblioteca de componentes para interfaces funcionais e rápidas.
@@ -25,6 +26,16 @@ O projeto é baseado em **Clean Architecture**, **Domain-Driven Design (DDD)** e
 - **Pinia**: Gerenciamento de estado centralizado.
 - **Clean Architecture**: Para separação clara de responsabilidades.
 
+### **Backend**
+- **Java (Sping Boot)**: Todo o processo será usado com ele, desde os cadastros mais basicos, até as autenticações.
+- **Delphi**: Será usado neste primeiro momento para as emissões fiscais.
+
+### **Integrações**
+- **Impressoras**: Para impressão dos documentos fiscais(NFC-e), e em caso de NF-e impressoras normais.
+- **Periféricos**: Serão homologados com base na necessidade, como balança, e demais periféricos.
+- **Apps Delivery**: Integrações completas com os principais apps de delivery do mercado.
+- **Marketplaces**: Todos os principais do mercado.
+- **IA**: Para suporte e gerações de relatórios dinamicos, com base na necessidade do cliente dentro do chat.
 ---
 
 ## 📂 Estrutura do Projeto
