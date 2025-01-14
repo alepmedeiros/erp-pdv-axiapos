@@ -38,7 +38,7 @@ O projeto é baseado em **Clean Architecture**, **Domain-Driven Design (DDD)** e
 - **IA**: Para suporte e gerações de relatórios dinamicos, com base na necessidade do cliente dentro do chat.
 ---
 
-## 📂 Estrutura do Projeto
+## 📂 Estrutura do Projeto ERP
 
 O projeto segue os princípios de **Clean Architecture**, dividido em camadas bem definidas:
 
@@ -93,6 +93,64 @@ src/
 
 ---
 
+## 📂 Estrutura do Projeto PDV
+
+O projeto segue os princípios de **Clean Architecture**, dividido em camadas bem definidas:
+
+```plaintext
+src/
+├── domain/
+│   ├── entities/
+│   │   └── Sale.ts
+│   ├── value-objects/
+│   ├── repositories/
+│   │   └── SaleRepository.ts
+│   └── services/
+│
+├── application/
+│   ├── use-cases/
+│   │   └── ProcessSale.ts
+│   └── dto/
+│       └── SaleDTO.ts
+│
+├── infrastructure/
+│   ├── persistence/
+│   │   └── SaleRepositoryImpl.ts
+│   ├── api/
+│   │   └── SyncService.ts
+│   ├── hardware/
+│   │   ├── PrinterService.ts
+│   │   └── BarcodeScanner.ts
+│   └── config/
+│
+├── presentation/
+│   ├── components/
+│   │   ├── ProductList.vue
+│   │   └── PaymentModal.vue
+│   ├── layouts/
+│   │   └── PDVLayout.vue
+│   ├── pages/
+│   │   └── Checkout.vue
+│   ├── router/
+│   │   └── index.ts
+│   └── store/
+│       └── saleStore.ts
+│
+├── tests/
+│   ├── unit/
+│   │   └── domain/
+│   │       └── ProcessSale.spec.ts
+│   ├── integration/
+│   └── utils/
+│
+├── assets/
+│   └── styles/
+│       └── tailwind.css
+├── App.vue
+└── main.ts
+```
+---
+
 ## 🛠️ Configuração e Instalação
 
 ### **1. Pré-requisitos**
@@ -104,6 +162,7 @@ src/
    ```bash
    git clone https://git.empresa.com.br/erp-pdv-axiapos.git
    cd erp-pdv-axiapos  
+   Obs.: Entre nas pastas dos projetos para que possam instalar as dependencias
 2. Instale as dependências:
    ```bash
    npm install
