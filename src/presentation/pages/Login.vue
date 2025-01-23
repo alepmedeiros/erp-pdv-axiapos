@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import apiClient, { setAuthToken } from '@/service/api';
-import router from '@/router';
+import apiClient, { setAuthToken } from '@/infrastructure/api/api';
+import router from '@/presentation/router';
 
 const login = ref(''); // Pode ser e-mail ou client_id
 const password = ref('');

@@ -20,8 +20,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import Navbar from '@/components/Navbar.vue'; // Importando Navbar componentizado
-import Sidebar from '@/components/Sidebar.vue'; // Importando Sidebar componentizado
+import Navbar from '@/presentation/components/Navbar.vue'; // Importando Navbar componentizado
+import Sidebar from '@/presentation/components/Sidebar.vue'; // Importando Sidebar componentizado
 
 const router = useRouter();
 

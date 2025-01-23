@@ -180,11 +180,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import FormInput from '@/components/FormInput.vue';
-import SelectAsync from '@/components/SelectAsync.vue';
+import FormInput from '@/presentation/components/FormInput.vue';
+import SelectAsync from '@/presentation/components/SelectAsync.vue';
 import semProdutoImg from '@/assets/semproduto.jpeg';
-import FormRow from '@/components/FormRow.vue';
-import { createProduct } from '@/service/productService';
+import FormRow from '@/presentation/components/FormRow.vue';
+import { createProduct } from '@/application/services/productService';
 
 const router = useRouter();
 const productImage = ref<string | null>(null);

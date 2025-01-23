@@ -1,5 +1,5 @@
-import apiClient from './api';
-import type { Payments } from '@/types/Payments';
+import apiClient from '../../infrastructure/api/api';
+import type { Payments } from '@/application/mappers/Payments';
 
 // Função para processar pagamento com cartão de crédito
 export const processPayment = async (paymentData: Payments) => {

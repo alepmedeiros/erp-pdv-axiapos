@@ -1,5 +1,5 @@
 import axios from 'axios';
-import router from '@/router'; // Importa o roteador para redirecionamento
+import router from '@/presentation/router'; // Importa o roteador para redirecionamento
 
 // Cria uma instância do axios com a configuração básica
 const apiClient = axios.create({

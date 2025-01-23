@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { onMounted, defineEmits } from 'vue';
-import { initializeMercadoPagoBrick, processPayment } from '@/service/mercadoPagoService';
+import { initializeMercadoPagoBrick, processPayment } from '@/application/services/mercadoPagoService';
 
 // Define o evento que será emitido após a confirmação do pagamento
 const emit = defineEmits<{

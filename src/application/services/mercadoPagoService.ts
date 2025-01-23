@@ -1,5 +1,5 @@
-import apiClient from './api'; // Axios configurado
-import type { MercadoPagoBrickSettings } from '@/types/MercadoPagoBrickSettings';
+import apiClient from '../../infrastructure/api/api'; // Axios configurado
+import type { MercadoPagoBrickSettings } from '@/application/mappers/MercadoPagoBrickSettings';
 
 const PUBLIC_KEY = 'TEST-7bcb7f4f-011b-40b8-94db-885fae8aee96';
 

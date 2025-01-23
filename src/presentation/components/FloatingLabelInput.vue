@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, computed, ref, watch  } from 'vue';
-import { formatCurrency, formatDecimal } from '@/utils/utils';
+import { formatCurrency, formatDecimal } from '@/application/helpers/utils';
 
 const props = defineProps<{
   modelValue?: string | number;

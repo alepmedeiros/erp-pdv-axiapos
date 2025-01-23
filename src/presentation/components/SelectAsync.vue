@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
-import apiClient from '@/service/api';
+import apiClient from '@/infrastructure/api/api';
 
 interface Option {
   id: string;

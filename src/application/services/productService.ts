@@ -1,4 +1,4 @@
-import apiClient from './api';
+import apiClient from '../../infrastructure/api/api';
 
 
 export const getProductByCode = async (codigo: string) => {

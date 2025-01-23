@@ -1,5 +1,5 @@
-import apiClient from './api';
-import type { Venda } from '@/types/Venda';
+import apiClient from '../../infrastructure/api/api';
+import type { Venda } from '@/application/mappers/Venda';
 
 export const finalizarVenda = async (venda: Venda) => {
   try {

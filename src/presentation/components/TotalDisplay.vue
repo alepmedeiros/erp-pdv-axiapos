@@ -19,7 +19,7 @@
   
   <script lang="ts" setup>
   import { defineProps } from 'vue';
-  import { formatCurrency } from '@/utils/utils'; // Importe a função formatCurrency
+  import { formatCurrency } from '@/application/helpers/utils'; // Importe a função formatCurrency
   
   const props = defineProps<{
     itemsCount: number;

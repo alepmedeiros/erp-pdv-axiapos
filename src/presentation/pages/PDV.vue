@@ -35,15 +35,15 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import ProductInput from '@/components/ProductInput.vue';
-import ProductList from '@/components/ProductList.vue';
-import ProductDisplay from '@/components/ProductDisplay.vue';
-import { getProductByCode } from '@/service/productService';
-import type { Item } from '@/types/items';
-import type { Venda } from '@/types/Venda';
-import type { ItensVenda } from '@/types/ItensVenda';
-import { finalizarVenda as enviarVenda } from '@/service/vendaService';
-import PaymentModal from '@/components/PaymentModal.vue';
+import ProductInput from '@/presentation/components/ProductInput.vue';
+import ProductList from '@/presentation/components/ProductList.vue';
+import ProductDisplay from '@/presentation/components/ProductDisplay.vue';
+import { getProductByCode } from '@/application/services/productService';
+import type { Item } from '@/application/mappers/items';
+import type { Venda } from '@/application/mappers/Venda';
+import type { ItensVenda } from '@/application/mappers/ItensVenda';
+import { finalizarVenda as enviarVenda } from '@/application/services/vendaService';
+import PaymentModal from '@/presentation/components/PaymentModal.vue';
 
 const productCode = ref<string>('');
 const productID = ref<string>('');

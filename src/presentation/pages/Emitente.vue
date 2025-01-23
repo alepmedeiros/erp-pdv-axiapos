@@ -210,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import Notification from '@/components/Notification.vue';
+import Notification from '@/presentation/components/Notification.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 

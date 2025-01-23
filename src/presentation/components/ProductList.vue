@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import { defineProps, computed } from 'vue';
-import { formatCurrency } from '@/utils/utils.ts';
+import { formatCurrency } from '@/application/helpers/utils';
 import TotalDisplay from './TotalDisplay.vue';
 
 

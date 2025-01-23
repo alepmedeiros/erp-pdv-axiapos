@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router';
+import router from './presentation/router';
 import VMoney from 'v-money3';
 import PrimeVue from 'primevue/config';
 import '@primevue/themes/aura';

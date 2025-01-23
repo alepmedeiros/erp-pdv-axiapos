@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits } from 'vue';
-import MercadoPagoPagamento from '@/components/MercadoPagoPagamento.vue';
+import MercadoPagoPagamento from '@/presentation/components/MercadoPagoPagamento.vue';
 
 // Define as propriedades recebidas pelo componente
 const props = defineProps<{
