@@ -1,0 +1,24 @@
+.width-10 {
+  flex: 0 0 10%; /* Ocupa 30% da largura disponível */
+}
+
+.width-20 {
+  flex: 0 0 20%; /* Ocupa 30% da largura disponível */
+}
+
+.width-30 {
+    flex: 0 0 30%; /* Ocupa 30% da largura disponível */
+  }
+  
+  .width-40 {
+    flex: 0 0 40%; /* Ocupa 40% da largura disponível */
+  }
+  
+  .width-60 {
+    flex: 0 0 60%; /* Ocupa 60% da largura disponível */
+  }
+  
+  .width-100 {
+    flex: 1; /* Ocupa 100% da linha, permitindo que o input expanda */
+  }
+  

@@ -1,0 +1,37 @@
+{
+  "name": "ac-pdv-vue",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@primevue/themes": "^4.2.5",
+    "@vuepic/vue-datepicker": "^11.0.0",
+    "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.7",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.2.5",
+    "v-money3": "^3.24.1",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/axios": "^0.9.36",
+    "@types/node": "^20.16.11",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue/tsconfig": "^0.5.1",
+    "npm-run-all2": "^6.2.3",
+    "typescript": "~5.5.4",
+    "vite": "^5.4.8",
+    "vue-tsc": "^2.1.6"
+  }
+}
