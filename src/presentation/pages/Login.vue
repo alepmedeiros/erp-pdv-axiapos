@@ -5,27 +5,25 @@
       <h2>Login</h2>
       <div class="input-group">
         <label for="username">Usuário</label>
-        <InputText id="username" type="text" placeholder="Digite seu usuário" class="w-full md:w-[30rem] mb-8" v-model="login" />
-        <!-- <input
+        <input
           v-model="login"
           id="username"
           type="text"
           placeholder="Digite seu usuário"
           required
           aria-label="Usuário"
-        /> -->
+        />
       </div>
       <div class="input-group">
         <label for="password">Senha</label>
-        <Password id="password1" v-model="password" placeholder="Digite sua senha" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
-        <!-- <input
+        <input
           v-model="password"
           id="password"
           type="password"
           placeholder="Digite sua senha"
           required
           aria-label="Senha"
-        /> -->
+        />
       </div>
       <button type="submit" :disabled="isLoading">
         {{ isLoading ? 'Entrando...' : 'Entrar' }}
