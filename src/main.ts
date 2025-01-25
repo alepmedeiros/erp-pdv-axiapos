@@ -3,13 +3,18 @@ import App from './App.vue';
 import router from './presentation/router';
 import VMoney from 'v-money3';
 import PrimeVue from 'primevue/config';
-import '@primevue/themes/aura';
+import Aura from '@primevue/themes/aura';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-createApp(App)
-    .use(router)
-    .use(VMoney)
-    .use(PrimeVue)
-    .mount('#app');
+const app = createApp(App);
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: {
+            darkModeSelector: '.app-dark'
+        }
+    }
+});
+app.use(router);
+app.use(VMoney);
+app.use(PrimeVue);
+app.mount('#app');
