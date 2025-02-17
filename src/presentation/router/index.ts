@@ -4,12 +4,18 @@ import Main from '@/presentation/pages/Main.vue';
 import Emitente from '@/presentation/pages/Emitente.vue';
 import Produtos from '@/presentation/pages/Produtos.vue';
 import PDV from '@/presentation/pages/PDV.vue';
+import CadastrarUsuario from '../pages/CadastrarUsuario.vue';
 
 const routes = [
   {
     path: '/',
     name: 'login',
     component: Login,
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: CadastrarUsuario,
   },
   {
     path: '/main',
