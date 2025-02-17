@@ -8,7 +8,7 @@ import CadastrarUsuario from '../pages/CadastrarUsuario.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: Login,
   },

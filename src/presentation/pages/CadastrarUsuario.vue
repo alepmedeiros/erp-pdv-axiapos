@@ -51,7 +51,7 @@
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
             <div class="signup-footer">
-                <p>Já tem uma conta? <a href="/login">Entrar</a></p>
+                <p>Já tem uma conta? <a href="/">Entrar</a></p>
             </div>
         </form>
     </div>
