@@ -63,12 +63,14 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import apiClient, { setAuthToken } from '@/infrastructure/api/api';
 
 const router = useRouter();
 const login = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
+const authMessage = ref<string | null>(null);
 
 onMounted(() => {
   const authMessage = localStorage.getItem('authMessage');
@@ -78,6 +80,8 @@ onMounted(() => {
   }
 });
 
+const payload = { email: login.value, senha: password.value };
+
 const handleLogin = async () => {
   if (!login.value || !password.value) {
     errorMessage.value = 'Por favor, preencha todos os campos.';
@@ -86,11 +90,23 @@ const handleLogin = async () => {
 
   try {
     isLoading.value = true;
-    // Simulação de chamada API
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    router.push('/main');
-  } catch (error) {
-    errorMessage.value = 'Erro ao fazer login. Tente novamente.';
+    const response = await apiClient.post('/auth/login', payload);
+    if (response.data){
+      // Extrair os tokens da resposta
+      const { access_token, refresh_token } = response.data;
+
+      // Salvar o token de autenticação e refresh token
+      setAuthToken(access_token);
+      localStorage.setItem('refreshToken', refresh_token);
+
+      // Redirecionar para a tela principal
+      const redirectTo = localStorage.getItem('redirectTo') || '/main';
+      router.push(redirectTo);
+
+    } 
+  } catch (error: any) {
+    errorMessage.value =
+      error.response?.data?.message || 'Erro ao fazer login. Tente novamente.';
   } finally {
     isLoading.value = false;
   }
