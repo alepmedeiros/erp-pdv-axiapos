@@ -1,69 +1,86 @@
 <template>
-  <p v-if="authMessage" class="alert">{{ authMessage }}</p>
   <div class="login-container">
-    <form @submit.prevent="handleLogin">
-      <h2>Login</h2>
-      <div class="input-group">
-        <label for="username">Usuário</label>
-        <InputText id="username" type="text" placeholder="Digite seu usuário" class="w-full md:w-[30rem] mb-8" v-model="login" />
-        <!-- <input
-          v-model="login"
-          id="username"
-          type="text"
-          placeholder="Digite seu usuário"
-          required
-          aria-label="Usuário"
-        /> -->
+    <form @submit.prevent="handleLogin" class="login-form">
+      <div class="login-header">
+        <h2>Entrar</h2>
+        <div class="social-icons">
+          <i class="pi pi-facebook"></i>
+          <i class="pi pi-github"></i>
+          <i class="pi pi-google"></i>
+        </div>
       </div>
+
       <div class="input-group">
-        <label for="password">Senha</label>
-        <Password id="password1" v-model="password" placeholder="Digite sua senha" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
-        <!-- <input
-          v-model="password"
-          id="password"
-          type="password"
-          placeholder="Digite sua senha"
-          required
-          aria-label="Senha"
-        /> -->
+        <span class="floating-label">
+          <InputText
+            v-model="login"
+            id="email"
+            class="p-inputtext"
+            placeholder=" "
+            required
+          />
+          <label for="email">E-mail</label>
+        </span>
       </div>
-      <button type="submit" :disabled="isLoading">
-        {{ isLoading ? 'Entrando...' : 'Entrar' }}
-      </button>
+
+      <div class="input-group">
+        <span class="floating-label">
+          <InputText
+            v-model="password"
+            id="password"
+            type="password"
+            placeholder=" "
+            required
+          />
+          <label for="password">Senha</label>
+        </span>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="remember" />
+        <label for="remember">Lembrar-me</label>
+      </div>
+
+      <Button
+        label="Entrar"
+        icon="pi pi-sign-in"
+        class="p-button-raised p-button-dark"
+        :loading="isLoading"
+        type="submit"
+      />
+
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+      <div class="login-footer">
+        <p>Não tem uma conta? <a href="/signup">Cadastre-se</a></p>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import apiClient, { setAuthToken } from '@/infrastructure/api/api';
-import router from '@/presentation/router';
-
+import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import apiClient, { setAuthToken } from '@/infrastructure/api/api';
 
-import Password from 'primevue/password';
-
-
-
-const login = ref(''); // Pode ser e-mail ou client_id
+const router = useRouter();
+const login = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
 const authMessage = ref<string | null>(null);
 
 onMounted(() => {
-  authMessage.value = localStorage.getItem('authMessage');
-  if (authMessage.value) {
-    localStorage.removeItem('authMessage'); // Limpa a mensagem após exibir
+  const authMessage = localStorage.getItem('authMessage');
+  if (authMessage) {
+    errorMessage.value = authMessage;
+    localStorage.removeItem('authMessage');
   }
 });
 
-// Regex para validar se o login é um e-mail
-const isEmail = (value: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(value);
-};
+const payload = { email: login.value, senha: password.value };
 
 const handleLogin = async () => {
   if (!login.value || !password.value) {
@@ -71,16 +88,9 @@ const handleLogin = async () => {
     return;
   }
 
-  // Define os campos de acordo com o tipo de entrada
-  const payload = isEmail(login.value)
-    ? { email: login.value, senha: password.value }
-    : { client_id: login.value, client_secret: password.value };
-
-  isLoading.value = true;
-  try {    
-    // Realizar a chamada para a API de login
+  try {
+    isLoading.value = true;
     const response = await apiClient.post('/auth/login', payload);
-
     if (response.data){
       // Extrair os tokens da resposta
       const { access_token, refresh_token } = response.data;
@@ -94,8 +104,6 @@ const handleLogin = async () => {
       router.push(redirectTo);
 
     } 
-    
-    // localStorage.removeItem('redirectTo');
   } catch (error: any) {
     errorMessage.value =
       error.response?.data?.message || 'Erro ao fazer login. Tente novamente.';
@@ -106,53 +114,126 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.alert {
-  color: red;
-  margin-bottom: 1em;
-}
-
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: #f5f5f5;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-form {
-  background-color: white;
+.login-form {
+  width: 100%;
+  max-width: 400px;
   padding: 20px;
+  background-color: white;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.input-group {
-  margin-bottom: 15px;
+.login-header {
+  margin-bottom: 20px;
 }
 
-input {
+.login-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.social-icons i {
+  font-size: 1.5em;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.social-icons i:hover {
+  color: #1e90ff;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.floating-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.floating-label input {
   width: 100%;
   padding: 10px;
-  margin-top: 5px;
+  font-size: 1em;
   border-radius: 5px;
   border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-label input:focus {
+  border-color: #1e90ff;
+  box-shadow: 0px 0px 6px rgba(30, 144, 255, 0.5);
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  transform: translateY(-18px);
+  font-size: 0.8em;
+  color: #1e90ff;
+  background-color: white;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  pointer-events: none;
+  font-size: 1em;
+  color: #aaa;
+  transition: all 0.2s ease;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkbox-group input {
+  margin-right: 10px;
 }
 
 button {
   width: 100%;
-  padding: 10px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.login-footer {
+  margin-top: 15px;
+}
+
+.login-footer p {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.login-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
 }
 
 .error-message {

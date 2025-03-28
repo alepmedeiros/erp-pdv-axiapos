@@ -2,7 +2,7 @@ import axios from 'axios';
 import router from '@/presentation/router'; // Importa o roteador para redirecionamento
 
 // Cria uma instância do axios com a configuração básica
-const apiClient = axios.create({
+const apiClient = axios.create({  
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       setAuthToken(null);
       localStorage.setItem('authMessage', 'Sessão expirada. Por favor, faça login novamente.');
-      router.push('/'); // Redireciona para a página de login
+      router.push('/login'); // Redireciona para a página de login
     }
     return Promise.reject(error);
   }
