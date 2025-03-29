@@ -19,6 +19,7 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.7",
+    "jwt-decode": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.2.5",
     "v-money3": "^3.24.1",
@@ -35,8 +36,8 @@
     "jsdom": "^26.0.0",
     "npm-run-all2": "^6.2.3",
     "typescript": "~5.5.4",
-    "vite": "^5.4.8",
-    "vitest": "^2.1.8",
+    "vite": "^6.2.3",
+    "vitest": "^3.0.9",
     "vue-tsc": "^2.1.6"
   }
 }

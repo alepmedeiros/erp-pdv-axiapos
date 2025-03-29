@@ -1,13 +1,13 @@
 <template>
-  <div class="emitente-container">
+  <div class="page-container">
     <div class="header">
-      <button class="back-button" @click="goBack">← VOLTAR</button>
+      <button class="btn btn-secondary back-button" @click="goBack">← VOLTAR</button>
       <h2>INSERIR EMITENTE</h2>
     </div>
 
-    <form @submit.prevent="submitForm" class="emitente-form">
+    <form @submit.prevent="submitForm" class="form-container grid-container">
       <!-- Dados Principais -->
-      <section>
+      <section class="card">
         <h3>Dados Principais</h3>
         <div class="form-row">
           <div class="form-group">
@@ -79,7 +79,7 @@
       </section>
 
       <!-- Endereço -->
-      <section>
+      <section class="card">
         <h3>Endereço</h3>
         <div class="form-row">
           <div class="form-group">
@@ -117,7 +117,7 @@
       </section>
 
       <!-- CNAE -->
-      <section>
+      <section class="card">
         <h3>CNAE</h3>
         <div v-for="(cnae, index) in formData.cnae" :key="index" class="form-row cnae-row">
           <div class="form-group">
@@ -141,7 +141,7 @@
       </section>
 
       <!-- Emissor Fiscal -->
-      <section>
+      <section class="card">
         <h3>Emissor Fiscal</h3>
         <div class="form-row">
           <div class="form-group">
@@ -190,8 +190,8 @@
         </div>
       </section>
 
-      <div class="form-actions">
-        <button type="submit" class="submit-button">Salvar</button>
+      <div class="form-actions form-row">
+        <button type="submit" class="btn btn-primary">Salvar</button>
       </div>
     </form>
 

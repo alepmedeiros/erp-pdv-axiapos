@@ -1,22 +1,22 @@
 <template>
-  <div class="product-container">
+  <div class="page-container">
     <div class="header">
-      <button class="back-button" @click="goBack">← VOLTAR</button>
+      <button class="btn btn-secondary back-button" @click="goBack">← VOLTAR</button>
       <h2>CADASTRAR NOVO PRODUTO</h2>
     </div>
 
     <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-    <form @submit.prevent="submitForm" class="product-form">
-      <section>
+    <form @submit.prevent="submitForm" class="form-container grid-container">
+      <section class="card">
         <h3>Produto</h3>
-        <div class="product-details">
-          <div class="product-image-upload">
+        <div class="product-details form-row">
+          <div class="product-image-upload form-group">
             <div class="image-preview" @click="triggerFileInput">
-              <img :src="productImage || semProdutoImg" alt="Produto" />
+              <img :src="productImage || semProdutoImg" alt="Produto" class="preview-image" />
             </div>
-            <input id="file-input" type="file" @change="handleImageUpload" ref="fileInput" />
+            <input id="file-input" type="file" @change="handleImageUpload" ref="fileInput" class="hidden-input" accept="image/*" />
           </div>
           <div class="product-info">
             <FormRow>
@@ -49,45 +49,61 @@
 
       <section>
         <h3>Dados Complementares</h3>
-        <FormRow>
-          <FormInput label="Código" v-model="formData.codigo" sizeClass="col-md-2" />
-          <FormInput label="Descrição PDV" v-model="formData.descricaoPDV" sizeClass="col-md-8" />
-          <FormInput label="EAN/GTIN" v-model="formData.gtin" sizeClass="col-md-4" />
-          <FormInput label="NCM" v-model="formData.ncm" sizeClass="col-md-2" />
-        </FormRow>
-        <FormRow>
-          <SelectAsync
-            label="Inativo"
-            v-model="formData.inativo"
-            selectId="inativo-select"
-            :staticOptions="[{ id: 'S', label: 'Sim' }, { id: 'N', label: 'Não' }]"
-            :useStatic="true"
-            sizeClass="col-md-2"
-          />
-          <SelectAsync
-            label="Arrendar"
-            v-model="formData.iat"
-            selectId="iat-select"
-            :staticOptions="[{ id: 'S', label: 'Sim' }, { id: 'N', label: 'Não' }]"
-            :useStatic="true"
-            sizeClass="col-md-2"
-          />
-          <SelectAsync 
-            label="IBPT" 
-            v-model="formData.ibpt" 
-            selectId="inpt-select"
-            :staticOptions="[{ id: 'P', label: 'Próprio' }, { id: 'T', label: 'Terceiros' }]"
-            :useStatic="true"
-            sizeClass="col-md-2" />
-          <SelectAsync
-            label="Sped"
-            v-model="formData.itemSped"
-            selectId="sped-select"
-            :staticOptions="[{ id: 'S', label: 'Sim' }, { id: 'N', label: 'Não' }]"
-            :useStatic="true"
-            sizeClass="col-md-2"
-          />
-        </FormRow>
+        <div class="complementary-data">
+          <div class="data-group">
+            <h4>Informações Básicas</h4>
+            <FormRow>
+              <FormInput label="Código" v-model="formData.codigo" sizeClass="col-md-3" />
+              <FormInput label="Descrição PDV" v-model="formData.descricaoPDV" sizeClass="col-md-9" />
+            </FormRow>
+            <FormRow>
+              <FormInput label="EAN/GTIN" v-model="formData.gtin" sizeClass="col-md-6" />
+              <FormInput label="NCM" v-model="formData.ncm" sizeClass="col-md-6" />
+            </FormRow>
+          </div>
+          
+          <div class="data-group status-options">
+            <h4>Status e Configurações</h4>
+            <div class="status-grid">
+              <SelectAsync
+                label="Status do Produto"
+                v-model="formData.inativo"
+                selectId="inativo-select"
+                :staticOptions="[{ id: 'S', label: 'Inativo' }, { id: 'N', label: 'Ativo' }]"
+                :useStatic="true"
+                sizeClass="col-12"
+                tooltip="Define se o produto está ativo ou inativo no sistema"
+              />
+              <SelectAsync
+                label="Arrendamento"
+                v-model="formData.iat"
+                selectId="iat-select"
+                :staticOptions="[{ id: 'S', label: 'Sim' }, { id: 'N', label: 'Não' }]"
+                :useStatic="true"
+                sizeClass="col-12"
+                tooltip="Indica se o produto pode ser arrendado"
+              />
+              <SelectAsync 
+                label="Tipo IBPT" 
+                v-model="formData.ibpt" 
+                selectId="inpt-select"
+                :staticOptions="[{ id: 'P', label: 'Próprio' }, { id: 'T', label: 'Terceiros' }]"
+                :useStatic="true"
+                sizeClass="col-12"
+                tooltip="Define a origem da tributação IBPT do produto"
+              />
+              <SelectAsync
+                label="Incluir no SPED"
+                v-model="formData.itemSped"
+                selectId="sped-select"
+                :staticOptions="[{ id: 'S', label: 'Sim' }, { id: 'N', label: 'Não' }]"
+                :useStatic="true"
+                sizeClass="col-12"
+                tooltip="Determina se o produto será incluído na escrituração fiscal digital"
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
       <section>
@@ -170,7 +186,7 @@
         </FormRow>
       </section>
 
-      <div class="form-actions">
+      <div class="form-actions form-row">
         <button type="submit" class="btn btn-primary">Salvar</button>
       </div>
     </form>
@@ -398,15 +414,71 @@ h3 {
   padding-bottom: 5px;
 }
 
+h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #5c6e74;
+  margin-bottom: 1rem;
+}
+
+.complementary-data {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.data-group {
+  background-color: #fafbfc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.status-options {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+}
+
+.status-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.status-options h4,
+.data-group h4 {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
 .success-message {
-  color: green;
+  color: #28a745;
   font-weight: bold;
   margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
 }
 
 .error-message {
-  color: red;
+  color: #dc3545;
   font-weight: bold;
   margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+  .complementary-data {
+    grid-template-columns: 1fr;
+  }
+  
+  .status-options {
+    margin-top: 1rem;
+  }
 }
 </style>

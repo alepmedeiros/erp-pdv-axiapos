@@ -5,9 +5,9 @@
                 <h2>Cadastrar-se</h2>
                 <p>Crie sua conta ou use suas redes sociais</p>
                 <div class="social-icons">
-                    <i class="pi pi-facebook"></i>
-                    <i class="pi pi-github"></i>
-                    <i class="pi pi-google"></i>
+                    <i class="pi pi-facebook" @click="handleSocialSignup('facebook')"></i>
+                    <i class="pi pi-github" @click="handleSocialSignup('github')"></i>
+                    <i class="pi pi-google" @click="handleSocialSignup('google')"></i>
                 </div>
             </div>
 
@@ -58,9 +58,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import apiClient from '@/infrastructure/api/api';
+import { initiateSocialAuth, handleSocialAuthCallback, getSocialUserData, isAuthenticating } from '@/infrastructure/auth/socialAuth';
 
 const primeronome = ref('');
 const ultimonome = ref('');
@@ -68,6 +71,44 @@ const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
+
+const router = useRouter();
+
+const handleSocialSignup = (provider: 'google' | 'facebook' | 'github') => {
+  localStorage.setItem('socialAuthProvider', provider);
+  initiateSocialAuth(provider);
+};
+
+onMounted(async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  const provider = localStorage.getItem('socialAuthProvider');
+
+  if (code && provider) {
+    try {
+      isLoading.value = true;
+      const { access_token } = await handleSocialAuthCallback(provider, code);
+      const userData = await getSocialUserData(provider, access_token);
+
+      // Enviar dados do usuário para a API
+      await apiClient.post('/auth/register', {
+        email: userData.email,
+        nome: userData.name,
+        provider: userData.provider,
+        providerId: userData.providerId,
+        photoUrl: userData.photoUrl
+      });
+
+      localStorage.removeItem('socialAuthProvider');
+      router.push('/');
+    } catch (error: any) {
+      console.error('Erro no cadastro social:', error);
+      errorMessage.value = 'Erro no cadastro social. Tente novamente.';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+});
 
 const handleSignup = async () => {
   if (!primeronome.value || !ultimonome.value || !email.value || !password.value) {
@@ -77,7 +118,15 @@ const handleSignup = async () => {
 
   try {
     isLoading.value = true;
-    // Simulação de chamada à API
+    await apiClient.post('/auth/register', {
+      email: email.value,
+      senha: password.value,
+      primeiroNome: primeronome.value,
+      ultimoNome: ultimonome.value
+    });
+    
+    router.push('/');
+
     await new Promise((resolve) => setTimeout(resolve, 2000));
     console.log('Cadastro realizado com sucesso!');
   } catch (error) {
@@ -94,17 +143,16 @@ const handleSignup = async () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
   padding: 20px;
 }
 
 .signup-form {
   width: 100%;
-  max-width: 450px;
-  padding: 20px;
+  max-width: 480px;
+  padding: 30px;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   text-align: center;
 }
 
@@ -143,13 +191,20 @@ const handleSignup = async () => {
 
 .input-row {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
 .input-group {
   flex: 1;
   position: relative;
+  margin-bottom: 0;
+}
+
+.floating-label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .floating-label input {
@@ -188,6 +243,12 @@ button {
   width: 100%;
 }
 
+.error-message {
+  color: #ff4d4f;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
 .signup-footer {
   margin-top: 15px;
 }
@@ -198,16 +259,37 @@ button {
 }
 
 .signup-footer a {
-  color: #007bff;
+  color: #1e90ff;
   text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .signup-footer a:hover {
+  color: #0066cc;
   text-decoration: underline;
 }
 
-.error-message {
-  color: red;
-  margin-top: 10px;
+@media (max-width: 480px) {
+  .signup-container {
+    padding: 15px;
+  }
+  
+  .signup-form {
+    padding: 20px;
+  }
+  
+  .signup-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .input-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .floating-label input {
+    font-size: 16px;
+  }
 }
 </style>

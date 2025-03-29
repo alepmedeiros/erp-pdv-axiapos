@@ -65,9 +65,12 @@ const navigateTo = (route: string) => {
 /* Conteúdo Principal */
 .content {
   margin-top: 60px;
+  margin-left: 70px;
   padding: 20px;
   overflow: auto;
   background-color: #fff;
   flex-grow: 1;
+  position: relative;
+  z-index: 1;
 }
 </style>
