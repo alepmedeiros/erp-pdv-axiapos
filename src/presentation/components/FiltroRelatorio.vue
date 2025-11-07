@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from 'vue';
+import { ref, defineEmits } from 'vue';
 
 const emit = defineEmits<{
     (e: 'filtro-aplicado', filtro: { dataInicial: string; dataFinal: string }): void;

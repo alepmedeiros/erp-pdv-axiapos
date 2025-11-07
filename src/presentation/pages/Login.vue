@@ -3,10 +3,11 @@
     <form @submit.prevent="handleLogin" class="login-form">
       <div class="login-header">
         <h2>Entrar</h2>
+        <p>Entre com sua conta ou use suas redes sociais</p>
         <div class="social-icons">
-          <i class="pi pi-facebook"></i>
-          <i class="pi pi-github"></i>
-          <i class="pi pi-google"></i>
+          <i class="pi pi-facebook" @click="handleSocialLogin('facebook')"></i>
+          <i class="pi pi-github" @click="handleSocialLogin('github')"></i>
+          <i class="pi pi-google" @click="handleSocialLogin('google')"></i>
         </div>
       </div>
 
@@ -44,7 +45,7 @@
       <Button
         label="Entrar"
         icon="pi pi-sign-in"
-        class="p-button-raised p-button-dark"
+        class="p-button-raised p-button-primary w-full"
         :loading="isLoading"
         type="submit"
       />
@@ -64,6 +65,7 @@ import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import apiClient, { setAuthToken } from '@/infrastructure/api/api';
+import { initiateSocialAuth, handleSocialAuthCallback, isAuthenticating } from '@/infrastructure/auth/socialAuth';
 
 const router = useRouter();
 const login = ref('');
@@ -80,7 +82,33 @@ onMounted(() => {
   }
 });
 
-const payload = { email: login.value, senha: password.value };
+const handleSocialLogin = (provider: 'google' | 'facebook' | 'github') => {
+  initiateSocialAuth(provider);
+};
+
+onMounted(async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  const provider = localStorage.getItem('socialAuthProvider');
+
+  if (code && provider) {
+    try {
+      isLoading.value = true;
+      const { access_token, refresh_token, expires_in } = await handleSocialAuthCallback(provider, code);
+      const expirationTime = Date.now() + expires_in * 1000;
+      setAuthToken(access_token, expirationTime);
+      localStorage.setItem('refreshToken', refresh_token);
+      localStorage.removeItem('socialAuthProvider');
+      const redirectTo = localStorage.getItem('redirectTo') || '/main';
+      router.push(redirectTo);
+    } catch (error: any) {
+      console.error('Erro na autenticação social:', error);
+      errorMessage.value = 'Erro na autenticação social. Tente novamente.';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+});
 
 const handleLogin = async () => {
   if (!login.value || !password.value) {
@@ -90,21 +118,20 @@ const handleLogin = async () => {
 
   try {
     isLoading.value = true;
+    const payload = { email: login.value, senha: password.value };
+    console.log('Enviando dados:', payload);
     const response = await apiClient.post('/auth/login', payload);
+    console.log(response.data);
     if (response.data){
-      // Extrair os tokens da resposta
-      const { access_token, refresh_token } = response.data;
-
-      // Salvar o token de autenticação e refresh token
-      setAuthToken(access_token);
+      const { access_token, refresh_token, expires_in } = response.data;
+      const expirationTime = Date.now() + expires_in * 1000;
+      setAuthToken(access_token, expirationTime);
       localStorage.setItem('refreshToken', refresh_token);
-
-      // Redirecionar para a tela principal
       const redirectTo = localStorage.getItem('redirectTo') || '/main';
       router.push(redirectTo);
-
     } 
   } catch (error: any) {
+    console.log(error);
     errorMessage.value =
       error.response?.data?.message || 'Erro ao fazer login. Tente novamente.';
   } finally {
@@ -119,18 +146,16 @@ const handleLogin = async () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
   padding: 20px;
-  box-sizing: border-box;
 }
 
 .login-form {
   width: 100%;
-  max-width: 400px;
-  padding: 20px;
+  max-width: 600px;
+  padding: 30px;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   text-align: center;
 }
 
@@ -139,19 +164,25 @@ const handleLogin = async () => {
 }
 
 .login-header h2 {
-  margin: 0 0 10px 0;
-  font-size: 1.8em;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
   color: #333;
+}
+
+.login-header p {
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .social-icons {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .social-icons i {
-  font-size: 1.5em;
+  font-size: 1.5rem;
   color: #666;
   cursor: pointer;
   transition: color 0.3s ease;
@@ -164,17 +195,19 @@ const handleLogin = async () => {
 .input-group {
   margin-bottom: 20px;
   position: relative;
+  width: 100%;
 }
 
 .floating-label {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .floating-label input {
   width: 100%;
   padding: 10px;
-  font-size: 1em;
+  font-size: 1rem;
   border-radius: 5px;
   border: 1px solid #ccc;
   outline: none;
@@ -189,7 +222,7 @@ const handleLogin = async () => {
 .floating-label input:focus + label,
 .floating-label input:not(:placeholder-shown) + label {
   transform: translateY(-18px);
-  font-size: 0.8em;
+  font-size: 0.8rem;
   color: #1e90ff;
   background-color: white;
 }
@@ -198,24 +231,35 @@ const handleLogin = async () => {
   position: absolute;
   top: 12px;
   left: 10px;
-  pointer-events: none;
-  font-size: 1em;
+  font-size: 1rem;
   color: #aaa;
   transition: all 0.2s ease;
 }
 
 .checkbox-group {
+  margin-bottom: 20px;
+  text-align: left;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 8px;
 }
 
-.checkbox-group input {
-  margin-right: 10px;
+.checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1e90ff;
 }
 
-button {
-  width: 100%;
+.checkbox-group label {
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.error-message {
+  color: #ff4d4f;
+  margin-top: 10px;
+  font-size: 0.9rem;
 }
 
 .login-footer {
@@ -223,21 +267,37 @@ button {
 }
 
 .login-footer p {
-  font-size: 0.9em;
+  font-size: 0.9rem;
   color: #666;
 }
 
 .login-footer a {
-  color: #007bff;
+  color: #1e90ff;
   text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .login-footer a:hover {
+  color: #0066cc;
   text-decoration: underline;
 }
 
-.error-message {
-  color: red;
-  margin-top: 10px;
+@media (max-width: 480px) {
+  .login-container {
+    padding: 15px;
+  }
+  
+  .login-form {
+    padding: 15px;
+  }
+  
+  .login-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .floating-label input {
+    font-size: 16px;
+  }
 }
 </style>

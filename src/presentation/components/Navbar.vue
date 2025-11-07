@@ -10,7 +10,7 @@
           class="logo" 
         />
       </router-link>
-      <span class="navbar-title">SISTEMA DE NFC-e - Pré-Aula</span>
+      <span class="navbar-title">SISTEMA DE NFC-e</span>
     </div>
 
     <!-- Área do usuário com o avatar -->
@@ -94,7 +94,7 @@ const logout = () => {
 .navbar {
   position: fixed;
   top: 0;
-  width: 100%;
+  width: calc(100% - 70px);
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -104,6 +104,7 @@ const logout = () => {
   padding: 0 20px;
   z-index: 1000;
   box-shadow: 0 4px 2px -2px gray;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navbar-logo {
@@ -128,6 +129,20 @@ const logout = () => {
   color: white;
   font-size: 24px;
   cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+}
+
+.menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-btn:active {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .user-info {
