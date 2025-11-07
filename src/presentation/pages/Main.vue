@@ -8,7 +8,7 @@
     />
 
     <!-- Sidebar Component -->
-    <Sidebar :isOpen="sidebarOpen" @navigate="navigateTo" />
+    <!-- <Sidebar :isOpen="sidebarOpen" @navigate="navigateTo" /> -->
 
     <!-- Conteúdo principal -->
     <div class="content">
@@ -64,7 +64,7 @@ const navigateTo = (route: string) => {
 
 /* Conteúdo Principal */
 .content {
-  margin-top: 60px;
+  /* margin-top: 60px; */
   margin-left: 70px;
   padding: 20px;
   overflow: auto;

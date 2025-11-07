@@ -1,7 +1,10 @@
 <template>
-  <aside class="sidebar" :class="{ 'sidebar-open': isOpen }">
+  <aside class="sidebar" :class="{ 'sidebar-open': isOpen, 'sidebar-collapsed': isCollapsed }">
     <div class="sidebar-header">
       <img src="/src/assets/logo.png" alt="Logo" class="sidebar-logo" />
+      <div class="sidebar-toggle" @click="toggleCollapse" :title="isCollapsed ? 'Expandir' : 'Recolher'">
+        <i :class="['pi', isCollapsed ? 'pi-angle-right' : 'pi-angle-left']"></i>
+      </div>
       <div class="sidebar-close" @click="$emit('toggle')">
         <i class="pi pi-times"></i>
       </div>
@@ -84,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, watch } from 'vue';
 
 const props = defineProps({
   isOpen: {
@@ -93,19 +96,33 @@ const props = defineProps({
   },
 });
 
+const isCollapsed = ref(false);
 const menuStatus = ref({
   cadastro: false,
   financeiro: false,
 });
 
+const toggleCollapse = () => {
+  isCollapsed.value = !isCollapsed.value;
+};
+
 const toggleMenu = (menu: keyof typeof menuStatus.value) => {
   menuStatus.value[menu] = !menuStatus.value[menu];
 };
+
+// Fechar submenus quando o sidebar for recolhido
+watch(isCollapsed, (newValue) => {
+  if (newValue) {
+    Object.keys(menuStatus.value).forEach(key => {
+      menuStatus.value[key as keyof typeof menuStatus.value] = false;
+    });
+  }
+});
 </script>
 
 <style scoped>
 .sidebar {
-  width: 70px;
+  width: 260px;
   background: linear-gradient(135deg, #2c2c54, #474787);
   color: var(--white);
   height: 100vh;
@@ -122,18 +139,79 @@ const toggleMenu = (menu: keyof typeof menuStatus.value) => {
   backdrop-filter: blur(10px);
 }
 
-.sidebar:hover,
-.sidebar.sidebar-open {
+.sidebar.sidebar-collapsed {
+  width: 70px;
+}
+
+.sidebar.sidebar-collapsed:hover {
   width: 260px;
 }
 
-
-
-.sidebar:not(.sidebar-open):not(:hover) .menu-item,
-.sidebar:not(.sidebar-open):not(:hover) .menu-header {
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 8px;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar.sidebar-collapsed .sidebar-toggle {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+    width: 260px;
+  }
+}
+
+.sidebar.sidebar-collapsed .menu-item,
+.sidebar.sidebar-collapsed .menu-header {
+  justify-content: center;
+  padding: 12px 0;
   margin: 5px auto;
+  position: relative;
+  width: 100%;
+}
+
+.sidebar.sidebar-collapsed .menu-item span,
+.sidebar.sidebar-collapsed .menu-header span,
+.sidebar.sidebar-collapsed .submenu {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  transition: all 0.3s ease;
+}
+
+.sidebar.sidebar-collapsed:hover .menu-item span,
+.sidebar.sidebar-collapsed:hover .menu-header span,
+.sidebar.sidebar-collapsed:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+}
+
+.sidebar.sidebar-collapsed .menu-icon {
+  margin: 0;
+  transition: margin 0.3s ease;
+}
+
+.sidebar.sidebar-collapsed:hover .menu-icon {
+  margin-right: 10px;
 }
 
 .menu-icon {
@@ -142,67 +220,53 @@ const toggleMenu = (menu: keyof typeof menuStatus.value) => {
   justify-content: center;
   width: 24px;
   height: 24px;
-  margin-right: 8px;
   min-width: 24px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   font-size: 1rem;
+  margin-right: 10px;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
+  padding: 12px 16px;
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   margin: 4px 8px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
 }
 
-.sidebar:not(.sidebar-open):not(:hover) .menu-item {
+.sidebar.sidebar-collapsed .menu-item {
   justify-content: center;
-  padding: 10px;
+  padding: 12px 0;
 }
 
-.sidebar:not(.sidebar-open):not(:hover) .menu-icon {
-  margin: 0;
-}
 .menu-item span,
 .menu-header span {
   white-space: nowrap;
   opacity: 1;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-left: 12px;
+  transition: all 0.3s ease;
   font-weight: 500;
   letter-spacing: 0.3px;
 }
 
-.sidebar:not(.sidebar-open):not(:hover) .menu-item span,
-.sidebar:not(.sidebar-open):not(:hover) .menu-header span,
-.sidebar:not(.sidebar-open):not(:hover) .submenu {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.sidebar:not(.sidebar-open):not(:hover) .menu-icon {
+.sidebar.sidebar-collapsed .menu-icon {
   margin: 0;
-  font-size: 1rem;
 }
 
-.sidebar:not(.sidebar-open):not(:hover) .pi {
+.sidebar.sidebar-collapsed:hover .menu-icon {
+  margin-right: 10px;
+}
+
+.sidebar.sidebar-collapsed .pi {
   margin-right: 0;
   font-size: 1.2rem;
-}
-
-.sidebar:not(.sidebar-open) .menu-icon,
-.sidebar:not(.sidebar-open) .pi {
-  margin-right: 0;
-}
-
-.sidebar:not(.sidebar-open):hover .menu-icon {
-  margin-right: 10px;
 }
 
 .sidebar-wrapper {
@@ -220,20 +284,23 @@ const toggleMenu = (menu: keyof typeof menuStatus.value) => {
   display: none;
 }
 
+.sidebar.sidebar-collapsed .menu-item,
+.sidebar.sidebar-collapsed .menu-header {
+  justify-content: center;
+}
 
-
-.sidebar:not(.sidebar-open):hover .menu-item,
-.sidebar:not(.sidebar-open):hover .menu-header {
+.sidebar.sidebar-collapsed:hover .menu-item,
+.sidebar.sidebar-collapsed:hover .menu-header {
   justify-content: flex-start;
 }
 
-.sidebar:not(.sidebar-open) .sidebar-logo {
+.sidebar.sidebar-collapsed .sidebar-logo {
   width: 35px;
   margin: 0 auto;
-  transition: width 0.3s, margin 0.3s;
+  transition: all 0.3s ease;
 }
 
-.sidebar:not(.sidebar-open):hover .sidebar-logo {
+.sidebar.sidebar-collapsed:hover .sidebar-logo {
   width: auto;
   margin: 0;
 }
@@ -296,39 +363,12 @@ const toggleMenu = (menu: keyof typeof menuStatus.value) => {
   transition: all 0.3s ease;
   margin: 5px 15px;
   justify-content: flex-start;
+  white-space: nowrap;
 }
 
 .menu-header:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #FFFFFF;
-}
-
-
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 4px 8px;
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(5px);
-}
-
-.menu-header {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
-  border-radius: 30px;
-  transition: all 0.3s ease;
-  margin: 5px 15px;
-  justify-content: flex-start;
 }
 
 .menu-icon {

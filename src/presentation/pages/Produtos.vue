@@ -186,7 +186,7 @@
         </FormRow>
       </section>
 
-      <div class="form-actions form-row">
+      <div class="form-actions">
         <button type="submit" class="btn btn-primary">Salvar</button>
       </div>
     </form>
